@@ -1,27 +1,21 @@
-import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Luz from "./containers/Luz";
-import Formulario from "./components/Formulario";
-import UserContext from "./contexts/UserContext";
-import CounterState from "./containers/CounterState";
-import CounterReducer from "./containers/CounterReducer";
+import TodoList from "./views/TodoList";
+import { Provider } from "react-redux";
+import store from "./store";
+import ThemeContextProvider from "./contexts/ThemeContext";
 import CounterHook from "./containers/CounterHook";
+import CounterReducer from "./containers/CounterReducer";
 
 function App() {
-  const user = {
-    username: "miusername",
-  };
   return (
     <>
-      {/* <Luz /> */}
-      <UserContext.Provider value={user}>
-        <Formulario />
-        <CounterState />
-        <CounterReducer />
-        <CounterHook />
-      </UserContext.Provider>
+      <Provider store={store}>
+        <ThemeContextProvider>
+          <TodoList />
+          <CounterHook />
+          <CounterReducer />
+        </ThemeContextProvider>
+      </Provider>
     </>
   );
 }

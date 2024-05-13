@@ -1,5 +1,6 @@
 import { useReducer } from "react";
 import CounterComponent from "../components/CounterComponent";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const initialCounterState = {
   count: 0,
@@ -18,8 +19,16 @@ const CounterReducer = () => {
 
   return (
     <div>
-      <CounterComponent count={state.count} />
-      <button onClick={() => dispath({ type: "INCREMENTAR" })}>Contar</button>
+      <ThemeContext.Consumer>
+        {(value) => (
+          <>
+            <CounterComponent count={state.count} />
+            <button onClick={() => dispath({ type: "INCREMENTAR" })}>
+              Contar
+            </button>
+          </>
+        )}
+      </ThemeContext.Consumer>
     </div>
   );
 };
