@@ -1,27 +1,41 @@
-import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Luz from "./containers/Luz";
-import Formulario from "./components/Formulario";
-import UserContext from "./contexts/UserContext";
-import CounterState from "./containers/CounterState";
-import CounterReducer from "./containers/CounterReducer";
-import CounterHook from "./containers/CounterHook";
+import LoginView from "./views/Login";
+import UserContextProvider from "./contexts/UserContext";
+import HomeView from "./views/Home";
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
-  const user = {
-    username: "miusername",
-  };
   return (
     <>
-      {/* <Luz /> */}
-      <UserContext.Provider value={user}>
-        <Formulario />
-        <CounterState />
-        <CounterReducer />
-        <CounterHook />
-      </UserContext.Provider>
+      <UserContextProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="" element={<Layout />}>
+              <Route path="" element={<HomeView />} />
+              <Route
+                path="login"
+                element={
+                  <PublicRoute>
+                    <LoginView />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="perfil"
+                element={
+                  <ProtectedRoute>
+                    <div>Perfil</div>
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="*" element={<div>404</div>} />
+          </Routes>
+        </BrowserRouter>
+      </UserContextProvider>
     </>
   );
 }
