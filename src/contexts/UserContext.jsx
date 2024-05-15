@@ -8,7 +8,6 @@ const UserContextProvider = (props) => {
     setEstaLogeado(true);
     //consumo de API
     //validar tokens
-
   };
 
   const cerrarSesion = () => {
