@@ -1,27 +1,36 @@
-import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Luz from "./containers/Luz";
-import Formulario from "./components/Formulario";
-import UserContext from "./contexts/UserContext";
-import CounterState from "./containers/CounterState";
-import CounterReducer from "./containers/CounterReducer";
-import CounterHook from "./containers/CounterHook";
+import { Avatar, Button } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
 
 function App() {
-  const user = {
-    username: "miusername",
+  const animations = {
+    initial: { opacity: 0, x: -100 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: 100 },
   };
+
   return (
     <>
-      {/* <Luz /> */}
-      <UserContext.Provider value={user}>
-        <Formulario />
-        <CounterState />
-        <CounterReducer />
-        <CounterHook />
-      </UserContext.Provider>
+      <AnimatePresence>
+        <motion.div
+          variants={animations}
+          initial="initial"
+          animate="animate"
+          exit={"exit"}
+          transition={{ duration: 10 }}
+        >
+          <Button variant="contained" size="small">
+            Button material UI
+          </Button>
+          <Avatar
+            sx={{
+              backgroundColor: "green",
+            }}
+            alt="Remy Sharp"
+            src="/static/images/avatar/1.jpg"
+          />
+        </motion.div>
+      </AnimatePresence>
     </>
   );
 }
