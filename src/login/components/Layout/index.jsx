@@ -1,22 +1,27 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const Layout = ({ options }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-      }}
-    >
-      {options.map((option, index) => (
-        <div key={index}>
-          <Link to={option.to}>{option.title}</Link>
-        </div>
-      ))}
+    <div style={{width:"100%"}}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          gap: 8,
+          alignContent: "space-around",
+        }}
+      >
+        {options.map((option, index) => (
+          <div key={index}>
+            <Link to={option.to}>{option.title}</Link>
+          </div>
+        ))}
+      </div>
+      <Outlet />
     </div>
   );
 };

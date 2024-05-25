@@ -1,10 +1,10 @@
 # Creando Aplicaciones Interactivas con ReactJS
 
 ## Resumen
-En este codelab, implementaremos un Login de 
+En este codelab, implementaremos un Login en una aplicación web
 
 ## Objetivos
-- Comprender los conceptos de componentes en ReactJS.
+- Implementar una funcionalidad de login en React
 
 
 ## Requisitos previos
@@ -26,37 +26,40 @@ npm run dev
 
 3. Abre tu navegador en `http://localhost:$PORT` para ver tu aplicación en desarrollo. ```buscar por $PORT in la consola ```
 
-## Paso 1: Componentes en React
-En React, los componentes son bloques de construcción fundamentales. Vamos a comenzar creando nuestro primer componente funcional.
+4. Instala las dependencias requeridas para el ejercicio: Redux, React-Redux y React Router DOM.
 
-**Tarea:**
-1. Crea un nuevo archivo llamado `MiComponente.js` dentro de la carpeta `src`.
-2. Define un componente funcional básico que devuelva un elemento JSX, por ejemplo, un `<div>` con un mensaje dentro.
-3. Importa y utiliza este componente en tu archivo `App.js`.
+```npm i @reduxjs/toolkit react-redux react-router-dom```
+
+## Paso 1: Estructura de la Aplicación.
+En primer lugar, vamos a definir la estructura de nuestra aplicación web. Empezaremos por abrir el archivo ```App.jsx```.
+
+En este archivo usaremos React Router Dom para definir la estructura de rutas de nuestra aplicación. 
+
+***Tarea*** 
+1. Define una estructura que cuente con las siguientes rutas: Home, Login, Perfil y pagina 404 (Not found)
+2. Por ahora cada ruta debe renderizar un div que contenga el nombre de la ruta.
 
 <details>
 <summary>Solución</summary>
 
+
+
+
 ```javascript
-// MiComponente.js
-import React from 'react';
-
-const MiComponente = () => {
- return <div>Hola, soy un componente React.</div>;
-};
-
-export default MiComponente;
-
 // App.js
 import React from 'react';
-import MiComponente from './MiComponente';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Mi Aplicación React</h1>
-      <MiComponente />
-    </div>
+    <BrowserRouter>
+        <Routes>
+            <Route path="" element={<div>Home</div>} />
+            <Route path="login" element={<div>Login</div>} />
+            <Route path="perfil" element={<div>perfil</div>} />
+            <Route path="*" element={<div>404</div>} />
+        </Routes>
+      </BrowserRouter>
   );
 }
 
@@ -64,277 +67,308 @@ export default App;
 ```
 </details>
 
-## Paso 2: Ciclo de Vida de Componentes
-Los componentes en React pasan por diferentes fases durante su vida útil. Aprenderemos a utilizar algunos de los métodos del ciclo de vida.
+### Paso 1.1: Creación de un Layout
+Para organizar mejor nuestras rutas vamos a crear un layout, para que cada vista contenga un conjunto de componentes por defecto. En este caso, el layout contendrá el header, la barra de navegación y el footer de la aplicación.
 
-Tarea:
+Recuerda usar el componente ```Outlet``` para poder mostrar las diferentes vistas de  nuestra estructura de rutas en el componente **Layout**.
 
-Agrega un componente de clase llamado CicloDeVidaComponente que implemente los métodos componentDidMount, componentDidUpdate y componentWillUnmount. Dentro de cada método, imprime un mensaje en la consola para demostrar cuándo se ejecuta cada uno. Observa la consola mientras interactúas con tu aplicación para ver el ciclo de vida en acción.
-<details>
-<summary>Solución</summary>
+***Tarea***
+1. Definir el componente ```Layout.jsx``` en la carpeta components.
+2. Recibir las opciones de la barra de navegación como propiedades del component.
+3. Imprimir las opciones como links de navegación.
 
-```javascript
-// CicloDeVidaComponente.js
-import React, { Component } from 'react';
-
-class CicloDeVidaComponente extends Component {
-  componentDidMount() {
-    console.log('El componente se ha montado.');
-  }
-
-  componentDidUpdate() {
-    console.log('El componente se ha actualizado.');
-  }
-
-  componentWillUnmount() {
-    console.log('El componente se va a desmontar.');
-  }
-
-  render() {
-    return <div>Componente con ciclo de vida.</div>;
-  }
-}
-
-export default CicloDeVidaComponente;
-
-// App.js
-import React from 'react';
-import CicloDeVidaComponente from './CicloDeVidaComponente';
-
-function App() {
-  return (
-    <div className="App">
-      <h1>Mi Aplicación React</h1>
-      <CicloDeVidaComponente />
-    </div>
-  );
-}
-
-export default App;
-
-```
-</details>
-
-
-## Paso 3: Uso de Hooks para la Gestión de Estado
-Los hooks en React son una forma moderna de trabajar con el estado y los efectos en los componentes funcionales.
-
-Tarea:
-
-Crea un nuevo componente funcional llamado Contador que utilice el hook useState para gestionar un contador.
-Implementa botones que incrementen y decrementen el valor del contador al hacer clic.
-Muestra el valor actual del contador en tu componente.
 
 <details>
 <summary>Solución</summary>
 
 ```javascript
-// Contador.js
-import React, { useState } from 'react';
 
-const Contador = () => {
-  const [contador, setContador] = useState(0);
+import PropTypes from "prop-types";
+import { Link, Outlet } from "react-router-dom";
 
+const Layout = ({ options }) => {
   return (
-    <div>
-      <h2>Contador: {contador}</h2>
-      <button onClick={() => setContador(contador + 1)}>Incrementar</button>
-      <button onClick={() => setContador(contador - 1)}>Decrementar</button>
+    <div style={{width:"100%"}}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          gap: 8,
+          alignContent: "space-around",
+        }}
+      >
+        {options.map((option, index) => (
+          <div key={index}>
+            <Link to={option.to}>{option.title}</Link>
+          </div>
+        ))}
+      </div>
+      <Outlet />
     </div>
   );
 };
 
-export default Contador;
+Layout.propTypes = {
+  options: PropTypes.arrayOf(
+    PropTypes.exact({
+      title: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired,
+    })
+  ),
+};
 
-// App.js
-import React from 'react';
-import Contador from './Contador';
+export default Layout;
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Mi Aplicación React</h1>
-      <Contador />
-    </div>
-  );
-}
-
-export default App;
 
 ```
+
 </details>
 
-## Paso 4: Utilizando Props para Pasar Datos entre Componentes
-En ReactJS, las props son una forma de pasar datos de un componente padre a un componente hijo. Aprenderemos cómo utilizar props para hacer que nuestros componentes sean más dinámicos y reutilizables al pasarles información necesaria.
 
-### Diferencia entre Props Destructurados y no Destructurados
-Cuando se pasan props a un componente en React, se pueden utilizar de dos maneras: destructuradas y no destructuradas. Veamos la diferencia entre ambas:
+Por último, agregamos el layout a nuestra estructura de rutas en ```App.jsx```:
 
-
-
-#### Props no Destructuradas
-En el caso de no destructurar las props, necesitamos referenciar las propiedades directamente a través del objeto props. Esto puede ser útil si queremos mantener la claridad sobre qué props se están utilizando en el componente.
-
-**Ejemplo:**
 ```javascript
-// Encabezado.js
-import React from 'react';
+const appOptions = [
+  {
+    title: "Home",
+    to: "",
+  },
+  {
+    title: "Login",
+    to: "login",
+  },
+]
+function App() {
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path=""
+            element={
+              <Layout
+                options={appOptions}
+              />
+            }
+          >
+            <Route path="" element={<HomeView />} />
+            <Route path="login" element={<div>Login</div>} />
+            <Route path="*" element={<div>404</div>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
+}
+```
 
-const Encabezado = (props) => {
+
+## Paso 2: Crear un formulario de login simple
+
+Para este caso crearemos la carpeta ```views``` donde guardaremos las vistas de nuestra aplicación.
+
+A continuación crearemos la vista ```Login.jsx``` que contendrá un formulario simple de login.
+
+```javascript
+
+const LoginView = () => {
+
   return (
     <div>
-      <h1>{props.titulo}</h1>
-      <p>{props.descripcion}</p>
+      <h1>Iniciar sesión</h1>
+      <p>Ingrese sus datos de usuario a continuación</p>
+      <form>
+        <input
+          name="username"
+          type="text"
+          placeholder="Username"
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+        />
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 };
 
-export default Encabezado;
+LoginView.propTypes = {};
+
+export default LoginView;
 ```
 
-#### Props Destructuradas
-Al utilizar props destructuradas, extraemos directamente las propiedades que necesitamos del objeto props. Esto nos permite utilizar esas propiedades directamente en el componente sin necesidad de referenciar `props.propiedad`.
+Ahora, necesitamos agregar la lógica para manejar la información del formulario y los cambios que haga el usuario. Para esto usaremos el hook ```useState```.
 
-**Ejemplo:**
+
 ```javascript
-// Encabezado.js
-import React from 'react';
+const LoginView = () => {
+  const [form, setForm] = useState({
+    username: "",
+    password: "",
+  });
 
-const Encabezado = ({ titulo, descripcion }) => {
-  return (
-    <div>
-      <h1>{titulo}</h1>
-      <p>{descripcion}</p>
-    </div>
-  );
-};
+  const handleLogin = (evento) => {
+    evento.preventDefault();
+    console.log("Login");
+   
+  };
 
-export default Encabezado;
+  const handleFormChange = (evento) => {
+    const inputName = evento.target.name;
+    const inputValue = evento.target.value;
+    setForm({
+      ...form,
+      [inputName]: inputValue,
+    });
+  };
+  return <div>....vista</div>
+}
 ```
 
-**Tarea:**
-1. Modifica el componente `Encabezado` para que acepte props como `titulo` y `descripcion`.
-2. Pasa estos props al utilizar el componente `Encabezado` en tu componente principal `App`.
-3. Experimenta cambiando los valores de los props para ver cómo afectan la visualización del componente.
+***Tarea***
+1. Implementar el formulario de login, de manera que al dar click al botón submit, en consola se imprima "Login" y la información actual del formulario.
 
-<details>
-  <summary>Solución</summary>
+
+Finalmente, agregaremos está pagina a nuestra estructura de rutas en el archivo ```App.jsx```.
+
+
+***Tarea***
+1. Crear las paginas de Home y 404.
+
+
+## Paso 3: Creación del Store para la aplicación
+Existen diversas maneras de proveer a nuestra aplicación con un estado global, entre esas opciones se encuentran React Context y ReduxJS. Para nuestro caso usaremos ReduxJS.
+
+Crearemos el archivo ```store.js``` en nuestro proyecto, entonces definiremos y exportaremos el **estado** o **store** global de nuestra aplicación usando Redux Toolkit.
+
+```javascript
+
+export default configureStore({
   
+});
+
+```
+
+A continuación, haremos que nuestra aplicación de React empiece a usar el estado global que acabamos de crear.
+
 ```javascript
-// Encabezado.js
-import React from 'react';
-
-const Encabezado = ({ titulo, descripcion }) => {
-    return (
-        <div>
-            <h1>{titulo}</h1>
-            <p>{descripcion}</p>
-        </div>
-    );
-};
-
-export default Encabezado;
-
-// App.js
-import React from 'react';
-import Encabezado from './Encabezado';
-import Cuerpo from './Cuerpo';
+import store from "./store";
 
 function App() {
-    return (
-        <div className="App">
-            <Encabezado titulo="Mi Aplicación React" descripcion="Una aplicación increíble construida con ReactJS." />
-            <Cuerpo />
-        </div>
-    );
+  return (
+    <>
+      <Provider store={store}>
+        <BrowserRouter>
+          ...rutas
+        </BrowserRouter>
+      </Provider>
+    </>
+  );
 }
-
-export default App;
 ```
-</details>
 
-## Paso 5: Construir Interfaces Compuestas con Componentes
-En ReactJS, una de las ventajas clave es la capacidad de construir interfaces compuestas, donde los componentes más grandes se construyen a partir de componentes más pequeños y reutilizables. Aprenderemos cómo construir y utilizar interfaces compuestas en nuestra aplicación.
+Con esto, ya hemos hecho configurado nuestra aplicación para que todos los componentes en nuestra estructura de rutas puedan acceder al estado global de la aplicación.
 
-**Tarea:**
-1. Crea un nuevo componente llamado `Encabezado` que muestre un encabezado con un título y una descripción.
-2. Crea otro componente llamado `Cuerpo` que muestre el cuerpo principal de la aplicación con contenido relevante.
-3. Utiliza estos componentes `Encabezado` y `Cuerpo` en tu componente principal `App` para construir una interfaz compuesta.
 
+## Paso 4: Creando slices
+Los slices son objetos de Redux que nos permiten crear de una manera sencilla los reductores, los estados y las acciones de nuestra aplicación. Para este ejercicio crearemos un slice para la funcionalidad: **login**.
+
+Recordemos como luce redux a nivel visual:
+![Redux architecture](redux.png)
+
+A continuación crearemos la carpeta **slices** y dentro el archvio ```auth.js```.
+
+Para crear el slice the autenticación, importaremos la función **createSlice** de la libreria ReduxToolkit. Dentro de nuestro slice vamos a crear 2 reductores: **login** y **logout**. Recordemos que cuando usamos **slices** la librería ReduxToolkit se encarga de crear los reductores y acciones correspondientes.
+
+```javascript
+import { createSlice } from "@reduxjs/toolkit";
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: {
+    autenticado: false,
+  },
+  reducers: (create) => ({
+    login: (state, action)=>{},
+    logout: ()=>{}
+  }),
+});
+
+//Exportamos el slice y las acciones creadas por el slice:
+export default authSlice;
+export const { login, logout } = authSlice.actions;
+```
+
+***Tarea***
+1. Implementar la función de login. Cuando se llame a esta función el estado de la aplicación debe cambiar el valor de ```autenticado``` a **true**
+2. Implementar la función de logout para cambiar el valor de ```autenticado``` a **false**
+
+## Paso 5: Agregar reductor al store global
+En el archivo **store.js** vamos a agregar el reductor que creamos en el paso anterior. Para ello vamos a importar el reductor y una función llamada ```combineSlices``` de la libreria de ReduxToolkit.
+
+Luego, crearemos una constante llamada **rootReducer** donde uniremos todos los reductores. A continuación, a la pasaremos un objeto para la función **configureStore** que contendrá nuestro **rootReducer**:
+
+```javascript
+import { combineSlices, configureStore } from "@reduxjs/toolkit";
+import auth from "../slices/auth";
+
+export const rootReducer = combineSlices(auth); //Se pueden pasar multiples slices para combinarlos todos en uno solo (rootReducer)
+
+export default configureStore({
+  reducer: rootReducer,
+});
+
+```
+
+
+## Paso 6: Realizar acción de login
+Desde la vista **Login** deberemos llamar a las acciones creadas por ReduxToolkit. Para esto, importaremos 2 funciones ```useSelector``` para acceder al estado global creado por redux, y ```useDispatch``` para acceder a la función dispatch para llamar a las funciones que creamos en los slices.
+
+```javascript
+
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+const LoginView = () => {
+  const autenticado = useSelector((state) => {
+    return state.auth.autenticado;
+  });
+
+  const dispatch = useDispatch();
+  return <div>...vista</div>
+}
+```
+
+
+***Tarea***
+1. Llamar a la acción login cuando el usuario le da click al botón de enviar formulario.
 
 <details>
 <summary>Solución</summary>
 
 ```javascript
-// Encabezado.js
-import React from 'react';
 
-const Encabezado = ({ titulo, descripcion }) => {
-    return (
-        <div>
-            <h1>{titulo}</h1>
-            <p>{descripcion}</p>
-        </div>
-    );
-};
-
-export default Encabezado;
-
-// Cuerpo.js
-import React from 'react';
-
-const Cuerpo = () => {
-  return (
-    <div>
-      <p>Contenido principal de la aplicación.</p>
-    </div>
-  );
-};
-
-export default Cuerpo;
-
-
-// App.js
-import React from 'react';
-import Encabezado from './Encabezado';
-import Cuerpo from './Cuerpo';
-
-function App() {
-  return (
-    <div className="App">
-      <Encabezado titulo="Mi Aplicación React" descripcion="Una aplicación increíble construida con ReactJS." />
-      <Cuerpo />
-    </div>
-  );
-}
-
-export default App;
+  const handleLogin = (evento) => {
+    evento.preventDefault();
+    console.log("Login");
+    dispatch(login())
+  };
 
 ```
+
 </details>
 
-## Conclusión
-¡Felicidades! Has completado este codelab donde aprendiste los conceptos fundamentales de ReactJS. Ahora estás listo para construir aplicaciones web más complejas utilizando componentes, el ciclo de vida de componentes y hooks para la gestión del estado.
+## Paso 7 y tarea:
+Crear la vista de logout con un botón para cerrar sesión. Llamar a la acción logout cuando el usuario hace click en cerrar sesión.
+
+## Paso 8 y tarea:
+Proteger la vista perfil de manera que solo pueda ser observada cuando el usuario ha hecho login, es decir, el usuario está autenticado.
 
 
 ## Evidencia a entregar
-Utilice los conceptos de componentes, propiedades y hooks para implementar una landing page (o una version parecida).
-
-El landing page, debe contener los siguientes elementos:
-
-- Encabezado: Titulo de la página y links de inicio y contacto
-- Mensaje de bienvenida
-- Botón de ver productos
-
-¡Recuerda que los componentes en React son creados como pequeños bloques de código que nos ayudan a implementar nuestras interfaces de usuario!
-
-**nota**
-En esta evidencia el estudiante debe seguir el enfoque de componentes de React, que en pocas palabras nos guia en la construccion de interfaces de usuario complejas a través de pequeños bloques llamados "Componentes". 
-
-A continuación verá un ejemplo de como se ve este enfoque graficamente.
-![Components](https://reactiveprogramming.io/_next/image?url=%2Ffigures%2Freact%2Fweb-components.png&w=1920&q=75)
-
-También, encontrara ejemplos de landing pages
-
-![Land page](LandPage.png)
-![Land page 2](https://themesbrand.com/zooki-react/assets/images/demo/index-2.jpg)
+Entregar una aplicación con la funcionalidad de login implementada. 

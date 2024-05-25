@@ -1,6 +1,14 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../slices/auth";
 
 const LoginView = () => {
+  const autenticado = useSelector((state) => {
+    return state.auth.autenticado;
+  });
+
+  const dispatch = useDispatch();
+
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -9,19 +17,7 @@ const LoginView = () => {
   const handleLogin = (evento) => {
     evento.preventDefault();
     console.log("Login");
-    fetch("https://fakestoreapi.com/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: form.username,
-        password: form.password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
+    dispatch(login())
   };
 
   const handleFormChange = (evento) => {
@@ -37,7 +33,7 @@ const LoginView = () => {
     <div>
       <h1>Login</h1>
       <p>Welcome to the Login page</p>
-      <form onSubmit={handleLogin}>
+      <form style={{display:"flex", flexDirection:"column"}} onSubmit={handleLogin}>
         <input
           name="username"
           type="text"
