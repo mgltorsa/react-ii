@@ -131,6 +131,7 @@ export default Layout;
 Por último, agregamos el layout a nuestra estructura de rutas en ```App.jsx```:
 
 ```javascript
+// App.jsx
 const appOptions = [
   {
     title: "Home",
@@ -173,6 +174,7 @@ Para este caso crearemos la carpeta ```views``` donde guardaremos las vistas de 
 A continuación crearemos la vista ```Login.jsx``` que contendrá un formulario simple de login.
 
 ```javascript
+// views/LoginView.jsx
 
 const LoginView = () => {
 
@@ -206,6 +208,7 @@ Ahora, necesitamos agregar la lógica para manejar la información del formulari
 
 
 ```javascript
+// views/LoginView.jsx
 const LoginView = () => {
   const [form, setForm] = useState({
     username: "",
@@ -242,12 +245,12 @@ Finalmente, agregaremos está pagina a nuestra estructura de rutas en el archivo
 
 
 ## Paso 3: Creación del Store para la aplicación
-Existen diversas maneras de proveer a nuestra aplicación con un estado global, entre esas opciones se encuentran React Context y ReduxJS. Para nuestro caso usaremos ReduxJS.
+Existen diversas maneras de proveer a nuestra aplicación con un estado global, entre esas opciones se encuentran React Context y Redux. Para nuestro caso usaremos Redux.
 
-Crearemos el archivo ```store.js``` en nuestro proyecto, entonces definiremos y exportaremos el **estado** o **store** global de nuestra aplicación usando Redux Toolkit.
+Crearemos el archivo ```store.js``` en nuestro proyecto, entonces definiremos y exportaremos el estado o store global de nuestra aplicación usando Redux Toolkit.
 
 ```javascript
-
+// store.js
 export default configureStore({
   
 });
@@ -257,6 +260,7 @@ export default configureStore({
 A continuación, haremos que nuestra aplicación de React empiece a usar el estado global que acabamos de crear.
 
 ```javascript
+// App.jsx
 import store from "./store";
 
 function App() {
@@ -286,6 +290,7 @@ A continuación crearemos la carpeta **slices** y dentro el archvio ```auth.js``
 Para crear el slice the autenticación, importaremos la función **createSlice** de la libreria ReduxToolkit. Dentro de nuestro slice vamos a crear 2 reductores: **login** y **logout**. Recordemos que cuando usamos **slices** la librería ReduxToolkit se encarga de crear los reductores y acciones correspondientes.
 
 ```javascript
+// slices/auth.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
@@ -371,4 +376,4 @@ Proteger la vista perfil de manera que solo pueda ser observada cuando el usuari
 
 
 ## Evidencia a entregar
-Entregar una aplicación con la funcionalidad de login implementada. 
+Entregar una aplicación con una funcionalidad de login implementada. Se debe hacer uso de ReduxJS y React Router DOM para su implementación.
